@@ -1,14 +1,21 @@
 version: 2.1
 
-jobs:
+orbs:
+  aws-cli: circleci/aws-cli@1.4.0
 
-  print_env:
-    docker:
-      - image: alpine:latest
+jobs:
+  populate_inventory:
+    executor: aws-cli/default
     steps:
-      - run: echo $ENV
+      - aws-cli/setup
+      - run:
+          command: |
+            aws ec2 describe-instances \
+               --query 'Reservations[*].Instances[*].PublicIpAddress' \
+               --filters "Name=tag:Project,Values=udacity" \
+               --output text
 
 workflows:
   default:
     jobs:
-      - print_env
+      - populate_inventory
