@@ -33,4 +33,6 @@ workflows:
   default:
     jobs:
       - populate_inventory
-      - print_inventory
+      - print_inventory:
+          requires:
+            - populate_inventory
