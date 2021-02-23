@@ -1,0 +1,14 @@
+version: 2.1
+
+jobs:
+
+  print_env:
+    docker:
+      - image: alpine:latest
+    steps:
+      - run: echo $ENV
+
+workflows:
+  default:
+    jobs:
+      - print_env
