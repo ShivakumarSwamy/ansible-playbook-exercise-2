@@ -29,10 +29,14 @@ jobs:
           at: ~/
       - run: cat ~/inventory
 
+  create_infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: aws cloudformation create-stack --template-body file://template.yml --stack-name circle-ci-test
+
 workflows:
   default:
     jobs:
-      - populate_inventory
-      - print_inventory:
-          requires:
-            - populate_inventory
+      - create_infrastructure
