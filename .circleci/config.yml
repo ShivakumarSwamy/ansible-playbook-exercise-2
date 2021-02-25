@@ -36,7 +36,32 @@ jobs:
       - checkout
       - run: aws cloudformation create-stack --template-body file://template.yml --stack-name circle-ci-test
 
+  execute-ansible-playbook:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "50:d5:1c:e8:b9:43:d9:30:82:32:2a:b1:99:12:19:dd"
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i ~/inventory main-remote.yml
+
 workflows:
   default:
     jobs:
-      - create_infrastructure
+      - populate_inventory
+      - print_inventory:
+          requires:
+            - populate_inventory
+      - execute-ansible-playbook:
+          requires:
+            - populate_inventory
