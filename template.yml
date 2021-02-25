@@ -15,4 +15,4 @@ Resources:
         - !Ref InstanceSecurityGroup
       KeyName: devops
       ImageId: 'ami-03d315ad33b9d49c4'
-      InstancType: t2.micro
+      InstanceType: t2.micro
