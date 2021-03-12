@@ -7,9 +7,10 @@ commands:
   destroy_environments:
     steps:
       - run:
-          name: Destroy Environment
+          name: Destroy Environment on Failure
           command: |
             aws cloudformation delete-stack --stack-name dev-${CIRCLE_WORKFLOW_ID}
+          when: on_fail
 
   intentionaly_fail:
     steps:
@@ -48,10 +49,7 @@ jobs:
       - checkout
       - run: aws cloudformation create-stack --template-body file://template.yml --stack-name dev-${CIRCLE_WORKFLOW_ID}
       - intentionaly_fail
-      - when:
-          condition: on_fail
-          steps:
-            - destroy_environments
+      - destroy_environments
 
   execute-ansible-playbook:
     docker:
