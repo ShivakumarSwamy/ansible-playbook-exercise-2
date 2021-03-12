@@ -107,7 +107,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - previous-pipline-id
+            - previous-pipeline-id
 
   promote_to_production:
     docker:
