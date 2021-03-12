@@ -104,6 +104,11 @@ jobs:
               --no-paginate \
               --query "Exports[?Name==\`PipelineId\`].Value" \
               --output text >> previous-pipeline-id
+      - run:
+          name: Install tar
+          command: |
+            yum update -y \
+            yum install -y tar
       - persist_to_workspace:
           root: ./
           paths:
@@ -126,11 +131,6 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - run:
-          name: Install tar
-          command: |
-            yum update -y \
-            yum install -y tar
       - attach_workspace:
           at: ~/
       - run:
