@@ -129,12 +129,13 @@ jobs:
       - aws-cli/setup
       - attach_workspace:
           at: ~/
+      - run: cat ~/previous-pipeline-id
       - run:
           name: Save previous pipline id to variable
           command: |
-            export PREVIOUS_PIPELINE_ID="$(cat ~/previous-pipeline-id)"
-            aws s3 rm "s3://${PREVIOUS_PIPELINE_ID}"
-            aws cloudformation delete-stack --stack-name s3-"${PREVIOUS_PIPELINE_ID}"
+            export PREVIOUS_PIPELINE_ID="$(cat ~/previous-pipeline-id)" \
+            && aws s3 rm "s3://${PREVIOUS_PIPELINE_ID}" \
+            && aws cloudformation delete-stack --stack-name s3-"${PREVIOUS_PIPELINE_ID}"
 #      - run:
 #          name: Empty Previous Bucket
 #          command: |
