@@ -132,7 +132,7 @@ jobs:
       - run:
           name: Save previous pipline id to variable
           command: |
-            PREVIOUS-PIPELINE-ID="$(cat ~/previous-pipeline-id)"
+            export PREVIOUS-PIPELINE-ID="$(cat ~/previous-pipeline-id)"
       - run:
           name: Empty Previous Bucket
           command: |
