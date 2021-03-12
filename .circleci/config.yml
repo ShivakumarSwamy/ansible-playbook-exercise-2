@@ -100,7 +100,7 @@ jobs:
       - run:
           name: Save Last Deployment S3 Bucket Name to file
           command: |
-            aws cloudformation list-exports
+            aws cloudformation list-exports \
               --no-paginate \
               --query "Exports[?Name==\`PipelineId\`].Value" \
               --output text >> previous-pipeline-id
@@ -126,6 +126,11 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
+      - run:
+          name: Install tar
+          command: |
+            yum update -y \
+            yum install -y tar
       - attach_workspace:
           at: ~/
       - run:
