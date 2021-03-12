@@ -133,28 +133,27 @@ jobs:
       - run:
           name: Save previous pipline id to variable
           command: |
-            export PREVIOUS_PIPELINE_ID="$(cat ~/previous-pipeline-id)" \
-            && aws s3 rm "s3://${PREVIOUS_PIPELINE_ID}" --recursive \
-            && aws cloudformation delete-stack --stack-name s3-"${PREVIOUS_PIPELINE_ID:0:7}"
-#      - run:
-#          name: Empty Previous Bucket
-#          command: |
-#
-#      - run:
-#          name: Delete bucket cloudformation
-#          command: |
+            export PREVIOUS_PIPELINE_ID="$(cat ~/previous-pipeline-id)"
+      - run:
+          name: Empty Previous Bucket
+          command: |
+            aws s3 rm "s3://${PREVIOUS_PIPELINE_ID}" --recursive
+      - run:
+          name: Delete bucket cloudformation
+          command: |
+            aws cloudformation delete-stack --stack-name s3-"${PREVIOUS_PIPELINE_ID:0:7}"
 
 workflows:
   default:
     jobs:
-#      - create_and_deploy_frontend
-      - get_last_deployment_id
-#          requires:
-#            - create_and_deploy_frontend
-#      - promote_to_production:
-#          requires:
-#            - get_last_deployment_id
+      - create_and_deploy_frontend
+      - get_last_deployment_id:
+          requires:
+            - create_and_deploy_frontend
+      - promote_to_production:
+          requires:
+            - create_and_deploy_frontend
       - clean_up_old_front_end:
           requires:
-            - get_last_deployment_id
-#            - promote_to_production
+#            - get_last_deployment_id
+            - promote_to_production
