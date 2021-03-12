@@ -94,9 +94,9 @@ jobs:
             aws s3 sync ./upload s3://${CIRCLE_WORKFLOW_ID}
 
   get_last_deployment_id:
-    docker:
-      - image: amazon/aws-cli
+    executor: aws-cli/default
     steps:
+      - aws-cli/setup
       - run:
           name: Save Last Deployment S3 Bucket Name to file
           command: |
@@ -104,11 +104,6 @@ jobs:
               --no-paginate \
               --query "Exports[?Name==\`PipelineId\`].Value" \
               --output text >> previous-pipeline-id
-      - run:
-          name: Install tar
-          command: |
-            yum update -y \
-            yum install -y tar
       - persist_to_workspace:
           root: ./
           paths:
@@ -128,9 +123,9 @@ jobs:
               --parameter-overrides PipelineId=${CIRCLE_WORKFLOW_ID}
 
   clean_up_old_front_end:
-    docker:
-      - image: amazon/aws-cli
+    executor: aws-cli/default
     steps:
+      - aws-cli/setup
       - attach_workspace:
           at: ~/
       - run:
@@ -155,7 +150,7 @@ workflows:
             - create_and_deploy_frontend
       - promote_to_production:
           requires:
-            - create_and_deploy_frontend
+            - get_last_deployment_id
       - clean_up_old_front_end:
           requires:
             - promote_to_production
