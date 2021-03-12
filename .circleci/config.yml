@@ -100,11 +100,10 @@ jobs:
       - run:
           name: Save Last Deployment S3 Bucket Name to file
           command: |
-            cd ~/
             aws cloudformation list-exports \
               --no-paginate \
               --query "Exports[?Name==\`PipelineId\`].Value" \
-              --output text >> previous-pipeline-id
+              --output text >> ~/previous-pipeline-id
       - persist_to_workspace:
           root: ~/
           paths:
@@ -131,7 +130,7 @@ jobs:
           at: ~/
       - run: cat ~/previous-pipeline-id
       - run:
-          name: Save previous pipline id to variable
+          name: Save previous pipeline id to variable
           command: |
             export PREVIOUS_PIPELINE_ID="$(cat ~/previous-pipeline-id)"
       - run:
