@@ -55,13 +55,13 @@ jobs:
           command: |
             ansible-playbook -i ~/inventory main-remote.yml
 
+  smoke_test:
+    docker:
+      - image: curlimages/curl:latest
+    steps:
+      - run: curl https://gotmeetig.com
+
 workflows:
   default:
     jobs:
-      - populate_inventory
-      - print_inventory:
-          requires:
-            - populate_inventory
-      - execute-ansible-playbook:
-          requires:
-            - populate_inventory
+      - smoke_test
