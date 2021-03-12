@@ -1,0 +1,14 @@
+Description: Create initial s3 bucket
+
+Parameters:
+  BucketId:
+    Type: String
+    Description: The id used to create s3 bucket
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketId
+
+

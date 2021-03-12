@@ -1,0 +1,51 @@
+Description: Create cloudfront distribution to access S3 bucket
+
+Parameters:
+
+  PipelineId:
+    Type: String
+    Description: The circle ci workflow id
+
+Resources:
+
+  CloudFrontOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: S3 Udacity Circle CI
+
+  WebSiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref PipelineId
+      PolicyDocument:
+        Statement:
+          - Sid: Cloudfront OAI
+            Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginAccessIdentity}"
+            Action: s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${PipelineId}/*"
+
+  Cloudfront:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        DefaultCacheBehavior:
+          ForwardedValues:
+            QueryString: False
+          TargetOriginId: s3-webpage
+          ViewerProtocolPolicy: https-only
+        DefaultRootObject: index.html
+        Enabled: True
+        Origins:
+          - DomainName: !Sub "${PipelineId}.s3.amazonaws.com"
+            Id: s3-webpage
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}"
+
+Outputs:
+  PipelineId:
+    Value: !Ref PipelineId
+    Export:
+      Name: PipelineId
