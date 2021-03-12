@@ -100,6 +100,7 @@ jobs:
       - run:
           name: Save Last Deployment S3 Bucket Name to file
           command: |
+            cd ~/
             aws cloudformation list-exports \
               --no-paginate \
               --query "Exports[?Name==\`PipelineId\`].Value" \
