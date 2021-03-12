@@ -48,8 +48,10 @@ jobs:
       - checkout
       - run: aws cloudformation create-stack --template-body file://template.yml --stack-name dev-${CIRCLE_WORKFLOW_ID}
       - intentionaly_fail
-      - destroy_environments:
-          when: on_fail
+      - when:
+          condition: on_fail
+          steps:
+            - destroy_environments
 
   execute-ansible-playbook:
     docker:
