@@ -133,14 +133,15 @@ jobs:
           name: Save previous pipline id to variable
           command: |
             export PREVIOUS_PIPELINE_ID="$(cat ~/previous-pipeline-id)"
-      - run:
-          name: Empty Previous Bucket
-          command: |
             aws s3 rm "s3://${PREVIOUS_PIPELINE_ID}"
-      - run:
-          name: Delete bucket cloudformation
-          command: |
             aws cloudformation delete-stack --stack-name s3-"${PREVIOUS_PIPELINE_ID}"
+#      - run:
+#          name: Empty Previous Bucket
+#          command: |
+#
+#      - run:
+#          name: Delete bucket cloudformation
+#          command: |
 
 workflows:
   default:
