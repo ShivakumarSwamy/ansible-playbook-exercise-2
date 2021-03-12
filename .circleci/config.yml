@@ -105,7 +105,7 @@ jobs:
               --query "Exports[?Name==\`PipelineId\`].Value" \
               --output text >> previous-pipeline-id
       - persist_to_workspace:
-          root: ./
+          root: ~/
           paths:
             - previous-pipline-id
 
