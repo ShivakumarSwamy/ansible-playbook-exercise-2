@@ -108,6 +108,7 @@ jobs:
           root: ~/
           paths:
             - previous-pipeline-id
+      - run: cat ~/previous-pipeline-id
 
   promote_to_production:
     docker:
