@@ -137,11 +137,11 @@ jobs:
       - run:
           name: Empty Previous Bucket
           command: |
-            aws s3 rm "s3://${PREVIOUS_PIPELINE_ID}" --recursive
+            aws s3 rm "s3://$(cat ~/previous-pipeline-id)" --recursive
       - run:
           name: Delete bucket cloudformation
           command: |
-            aws cloudformation delete-stack --stack-name s3-"${PREVIOUS_PIPELINE_ID:0:7}"
+            aws cloudformation delete-stack --stack-name "s3-$(cat ~/previous-pipeline-id | awk -F - '{print $1}')"
 
 workflows:
   default:
