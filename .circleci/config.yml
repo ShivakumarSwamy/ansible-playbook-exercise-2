@@ -103,7 +103,7 @@ jobs:
             aws cloudformation list-exports \
               --no-paginate \
               --query "Exports[?Name==\`PipelineId\`].Value" \
-              --output text >> ~/previous-pipeline-id
+              --output text > ~/previous-pipeline-id
       - persist_to_workspace:
           root: ~/
           paths:
